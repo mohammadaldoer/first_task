@@ -1,0 +1,69 @@
+@use '../styles/variables' as vars;
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  background-color: vars.$dark-blue;
+  box-shadow: vars.$dark-shadow;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: vars.$white;
+    cursor: pointer;
+
+    @media (max-width: 768px) {
+      font-size: 1.25rem;
+    }
+  }
+
+  .themeToggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: vars.$white;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: vars.$dark-gray;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    flex-wrap: nowrap;
+    padding: 15px 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 0;
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 8px;
+    gap: 0;
+    width: 99%;
+  }
+}

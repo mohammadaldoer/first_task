@@ -1,0 +1,160 @@
+@use '../styles/variables' as vars;
+
+.countryDetails {
+  padding: 20px;
+  background-color: vars.$dark-blue;
+
+  .backButton {
+    padding: 10px 20px;
+    background-color: vars.$dark-blue;
+    color: vars.$white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: vars.$dark-shadow;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 20px;
+
+    &:hover {
+      background-color: lighten(vars.$dark-blue, 10%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(lighten(vars.$dark-blue, 10%), 0.3);
+    }
+  }
+}
+
+  .content {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+
+    img {
+      max-width: 40%;
+      height: auto;
+      border-radius: 8px;
+      margin-right: 20px;
+    }
+
+    .details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      h2 {
+        font-size: 1.8rem;
+        margin: 0;
+        color: vars.$white;
+      }
+
+      .info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        .group {
+          flex: 1;
+
+          p {
+            margin: 10px 0;
+            font-size: 1rem;
+            color: vars.$white;
+
+            strong {
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .bordersSection {
+    margin-top: 60px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: vars.$dark-blue;
+
+    h3 {
+      margin: 0 0 15px 0;
+      font-size: 1.2rem;
+      color: vars.$white;
+    }
+
+    .flexCards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+
+      .countrDiv {
+        padding: 10px 16px;
+        font-size: 14px;
+        background-color: vars.$very-dark-blue-bg;
+        color: vars.$white;
+        border: 1px solid vars.$dark-gray;
+        border-radius: 4px;
+        box-shadow: vars.$dark-shadow;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: lighten(vars.$dark-blue, 10%);
+        }
+      }
+    }
+  }
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+
+    img {
+      max-width: 100%;
+      margin-right: 0;
+    }
+
+    .details {
+      .info {
+        flex-direction: column;
+        gap: 20px;
+
+        .group {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .bordersSection {
+    margin-top: 30px;
+    padding: 15px;
+
+    .flexCards {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .details {
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .info .group p {
+        font-size: 0.9rem;
+      }
+    }
+
+    .bordersSection {
+      margin-top: 20px;
+      padding: 10px;
+
+      .flexCards {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  }
+}

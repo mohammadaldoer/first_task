@@ -1,0 +1,31 @@
+.filtering-box {
+    width: 99%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 15px;
+    margin-left: 60px;
+    padding: 20px;
+    padding-bottom: 5px;
+  
+    @media (max-width: 1024px) {
+      flex-wrap: nowrap;
+      padding: 15px;
+    }
+  
+    @media (max-width: 768px) {
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 10px;
+    }
+  
+    @media (max-width: 480px) {
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 0;
+      margin: 0;
+      width: 98%;
+    }
+  }
+  
