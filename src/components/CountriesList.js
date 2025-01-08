@@ -1,12 +1,14 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CountriesContext } from '../context/CountriesContext';
-import styles from '../styles/CountriesList.module.scss';
+import styles from '../styles/countriesList.module.scss';
 
-function CountriesList({ onSelectCountry }) {
+function CountriesList() {
   const { filteredCountries } = useContext(CountriesContext);
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 8;
   const totalPages = Math.ceil(filteredCountries.length / cardsPerPage);
+  const navigate = useNavigate();
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
@@ -24,13 +26,25 @@ function CountriesList({ onSelectCountry }) {
     }
   };
 
+  const handleCountryClick = (country) => {
+    navigate(`/country/${country.cca3}`);
+  };
+
   return (
     <>
       <ul className={styles['countries-list']}>
         {currentCountries.length > 0 ? (
           currentCountries.map((country) => (
-            <li key={country.name.common} className={styles['country-card']} onClick={() => onSelectCountry(country)}>
-              <img src={country.flags.svg} alt={`${country.name.common} flag`} className={styles['country-card-img']} />
+            <li
+              key={country.name.common}
+              className={styles['country-card']}
+              onClick={() => handleCountryClick(country)}
+            >
+              <img
+                src={country.flags.svg}
+                alt={`${country.name.common} flag`}
+                className={styles['country-card-img']}
+              />
               <div className={styles['country-details']}>
                 <h2>{country.name.common}</h2>
                 <p>
@@ -74,4 +88,3 @@ function CountriesList({ onSelectCountry }) {
 }
 
 export default CountriesList;
-

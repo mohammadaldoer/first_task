@@ -4,7 +4,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 60px;
+  padding: 20px 60px 20px 100px;
   background-color: vars.$dark-blue;
   box-shadow: vars.$dark-shadow;
   border-radius: 8px;
@@ -63,7 +63,9 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     padding: 8px;
+    margin: 0;
+    margin-bottom: 15px;
     gap: 0;
-    width: 99%;
+    width: 100%;
   }
 }

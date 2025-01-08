@@ -1,7 +1,7 @@
 import React from 'react'
 import SearchTab from './SearchTab'
 import DropdownMenu from './DropdownMenu'
-import styles from '../styles/FilteringComponents.module.scss'
+import styles from '../styles/filteringComponents.module.scss'
 
 function FilteringComponents() {
   return (
