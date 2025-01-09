@@ -6,7 +6,7 @@
   justify-content: flex-start;
   gap: 2.5rem;
   padding: 1rem;
-  margin: 20px 60px;
+  margin: 20px 120px;
   width: 100%;
   background-color: vars.$dark-blue;
 
@@ -22,11 +22,9 @@
     overflow: hidden;
     box-shadow: vars.$dark-shadow;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin: 0;
 
     &:hover {
       transform: translateY(-5px);
-      // Extract the color from vars.$dark-shadow and lighten it
       box-shadow: 0 4px 6px rgba(lighten(vars.$dark-blue, 10%), 0.3);
     }
 
@@ -39,20 +37,19 @@
     .country-details {
       flex: 1;
       padding: 0.75rem;
-      text-align: left;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
 
       h2 {
-        font-size: 1rem;
+        font: 1rem vars.$font-family;
         margin: 0;
         color: vars.$white;
       }
 
       p {
         margin: 6px 0;
-        font-size: 0.875rem;
+        font: 0.875rem vars.$font-family;
         color: vars.$white;
 
         span {
@@ -72,7 +69,7 @@
 
   button {
     padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font: 1rem vars.$font-family;
     background-color: vars.$dark-blue;
     color: vars.$white;
     border: none;
@@ -90,8 +87,7 @@
   }
 
   span {
-    font-size: 1rem;
-    font-weight: bold;
+    font: bold 1rem vars.$font-family;
     color: vars.$white;
   }
 }
@@ -112,6 +108,7 @@
   .countries-list {
     gap: 1rem;
     padding: 0.5rem;
+    margin: 50px;
 
     .country-card {
       flex: 1 1 calc(80% - 1rem);

@@ -1,40 +1,33 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import FilteringComponents from './components/FilteringComponents';
 import CountriesList from './components/CountriesList';
 import CountryDetails from './components/CountryDetails';
 import CountriesProvider from './context/CountriesContext';
-import './styles/CountriesList.module.scss';
+import './styles/countriesList.module.scss';
 
 function App() {
-  const [selectedCountry, setSelectedCountry] = useState(null);
-
-  const handleSelectCountry = useCallback((country) => {
-    setSelectedCountry(country);
-  }, []);
-
-  const handleBackToList = () => {
-    setSelectedCountry(null);
-  };
-
   return (
-    <div className="App">
-        <Navbar goBack={handleBackToList} />
+    <Router>
+      <div className="App">
+        <Navbar />
         <CountriesProvider>
-          {selectedCountry ? (
-            <CountryDetails
-              country={selectedCountry}
-              goBack={handleBackToList}
-              onSelectCountry={handleSelectCountry}
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <FilteringComponents />
+                  <CountriesList />
+                </>
+              }
             />
-          ) : (
-            <>
-              <FilteringComponents />
-              <CountriesList onSelectCountry={handleSelectCountry} />
-            </>
-          )}
+            <Route path="/country/:countryCode" element={<CountryDetails />} />
+          </Routes>
         </CountriesProvider>
-    </div>
+      </div>
+    </Router>
   );
 }
 

@@ -1,24 +1,18 @@
 import React, { useContext, useState } from 'react';
 import { CountriesContext } from '../context/CountriesContext';
-import styles from '../styles/DropdownMenu.module.scss';
+import styles from '../styles/dropdownMenu.module.scss';
 
 const regions = ['Filter by Region', 'Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
 
 function DropdownMenu() {
-  const { countries, setFilteredCountries } = useContext(CountriesContext);
+  const { filterByRegion } = useContext(CountriesContext);
   const [selectedRegion, setSelectedRegion] = useState('Filter by Region');
   const [isOpen, setIsOpen] = useState(false);
 
   const handleRegionSelect = (region) => {
     setSelectedRegion(region);
     setIsOpen(false);
-
-    if (region === 'Filter by Region') {
-      setFilteredCountries(countries);
-    } else {
-      const filtered = countries.filter((country) => country.region === region);
-      setFilteredCountries(filtered);
-    }
+    filterByRegion(region);
   };
 
   return (

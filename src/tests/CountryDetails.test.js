@@ -1,134 +1,125 @@
 import React from 'react';
 import 'mutationobserver-shim';
-import { render, screen, fireEvent, waitFor , within } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CountryDetails from '../components/CountryDetails';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-const mockGoBack = jest.fn();
-const mockOnSelectCountry = jest.fn();
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+  useParams: () => ({ countryCode: 'TST' }),
+}));
 
-const renderWithProps = (country) => {
+
+function renderComponent(){
   render(
-    <CountryDetails
-      country={country}
-      goBack={mockGoBack}
-      onSelectCountry={mockOnSelectCountry}
-    />
+    <MemoryRouter initialEntries={['/country/TST']}>
+      <Routes>
+        <Route path="/country/:countryCode" element={<CountryDetails />} />
+      </Routes>
+    </MemoryRouter>
   );
-};
+}
 
 describe('CountryDetails Component', () => {
-  const mockCountry = {
-    flags: { svg: 'https://flag.svg' },
-    name: {
-      common: 'Test Country',
-      nativeName: { test: { common: 'Test Native' } },
-    },
-    population: 12345678,
-    region: 'Test Region',
-    subregion: 'Test Subregion',
-    capital: ['Test Capital'],
-    tld: ['.tc'],
-    currencies: { TST: { name: 'Test Currency' } },
-    languages: { test: 'Test Language' },
-    borders: ['TST1', 'TST2'],
-  };
-
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-
-  test('renders correctly with country details', () => {
-    renderWithProps(mockCountry);
-  
-    expect(screen.getByRole('button', { name: /← back/i })).toBeInTheDocument();
-    expect(screen.getByAltText(/test country flag/i)).toBeInTheDocument();
-    expect(screen.getByText(/test country/i)).toBeInTheDocument();
-  
-    const groupContainer = screen.getByText(/native name/i).closest('.group');
-  
-    expect(
-      within(groupContainer).getByText((content, element) => {
-        const hasText = (node) => node.textContent === 'Region: Test Region';
-        const nodeHasText = hasText(element);
-        const childrenDontHaveText = Array.from(element?.children || []).every(
-          (child) => !hasText(child)
-        );
-        return nodeHasText && childrenDontHaveText;
-      })
-    ).toBeInTheDocument();
-  
-    expect(
-      within(groupContainer).getByText((content, element) => {
-        const hasText = (node) => node.textContent === 'Sub Region: Test Subregion';
-        const nodeHasText = hasText(element);
-        const childrenDontHaveText = Array.from(element?.children || []).every(
-          (child) => !hasText(child)
-        );
-        return nodeHasText && childrenDontHaveText;
-      })
-    ).toBeInTheDocument();
-  
-    expect(screen.getByText(/test currency/i)).toBeInTheDocument();
-    expect(screen.getByText(/test language/i)).toBeInTheDocument();
-  });
-  
-
-  test('renders "No borders available." when borders are null', () => {
-    const countryWithoutBorders = { ...mockCountry, borders: null };
-    renderWithProps(countryWithoutBorders);
-
-    expect(screen.getByText(/no borders available/i)).toBeInTheDocument();
-  });
-
-  test('calls goBack function when back button is clicked', () => {
-    renderWithProps(mockCountry);
-
-    const backButton = screen.getByRole('button', { name: /← back/i });
-    fireEvent.click(backButton);
-
-    expect(mockGoBack).toHaveBeenCalledTimes(1);
-  });
-
-  test('calls onSelectCountry with border country details when border country is clicked', async () => {
+  test('renders correctly with country details', async () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
+        ok: true,
         json: () =>
-          Promise.resolve([{ name: { common: 'Border Country' } }]),
+          Promise.resolve([
+            {
+              flags: { svg: 'https://flag.svg' },
+              name: {
+                common: 'Test Country',
+                nativeName: { eng: { common: 'Test Native' } },
+              },
+              population: 12345678,
+              region: 'Test Region',
+              subregion: 'Test Subregion',
+              capital: ['Test Capital'],
+              tld: ['.tc'],
+              currencies: { USD: { name: 'US Dollar' } },
+              languages: { eng: 'English' },
+              borders: ['AAA', 'BBB'],
+            },
+          ]),
       })
     );
 
-    renderWithProps(mockCountry);
+    renderComponent();
 
-    const borderButton = screen.getByText(/tst1/i);
-    fireEvent.click(borderButton);
+    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
 
-    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
-    expect(global.fetch).toHaveBeenCalledWith(
-      'https://restcountries.com/v3.1/alpha/TST1'
-    );
-    expect(mockOnSelectCountry).toHaveBeenCalledWith({
-      name: { common: 'Border Country' },
+    await waitFor(() => {
+      expect(screen.getByText(/test country/i)).toBeInTheDocument();
+    });
+
+    expect(screen.getByText(/test region/i)).toBeInTheDocument();
+    expect(screen.getByText(/12,345,678/i)).toBeInTheDocument();
+    expect(screen.getByText(/test subregion/i)).toBeInTheDocument();
+    expect(screen.getByText(/test capital/i)).toBeInTheDocument();
+    expect(screen.getByText(/\.tc/i)).toBeInTheDocument();
+    expect(screen.getByText(/us dollar/i)).toBeInTheDocument();
+    expect(screen.getByText(/english/i)).toBeInTheDocument();
+    global.fetch.mockClear();
+  });
+
+  test('renders error message for API failure', async () => {
+    global.fetch = jest.fn(() => Promise.reject(new Error('API Error')));
+
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText(/error: api error/i)).toBeInTheDocument();
     });
 
     global.fetch.mockClear();
   });
 
-  test('handles missing props gracefully', () => {
-    const incompleteCountry = {
-      ...mockCountry,
-      currencies: null,
-      languages: null,
-    };
-
-    renderWithProps(incompleteCountry);
-
-    expect(screen.getByText(/currencies:/i).textContent).toBe(
-      'Currencies: '
+  test('calls navigate on back button click', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve([
+            {
+              flags: { svg: 'https://flag.svg' },
+              name: {
+                common: 'Test Country',
+                nativeName: { eng: { common: 'Test Native' } },
+              },
+              population: 12345678,
+              region: 'Test Region',
+              subregion: 'Test Subregion',
+              capital: ['Test Capital'],
+              tld: ['.tc'],
+              currencies: { USD: { name: 'US Dollar' } },
+              languages: { eng: 'English' },
+              borders: ['AAA', 'BBB'],
+            },
+          ]),
+      })
     );
-    expect(screen.getByText(/languages:/i).textContent).toBe(
-      'Languages: '
-    );
+  
+    renderComponent();
+  
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /test country/i })
+      ).toBeInTheDocument();
+    });
+  
+    const backButton = screen.getByRole('button', { name: /← back/i });
+    fireEvent.click(backButton);
+  
+    expect(mockNavigate).toHaveBeenCalledWith('/');
+    global.fetch.mockClear();
   });
 });

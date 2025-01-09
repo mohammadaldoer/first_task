@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState ,useEffect} from 'react';
 import { CountriesContext } from '../context/CountriesContext';
-import styles from '../styles/SearchTab.module.scss';
+import styles from '../styles/searchTab.module.scss';
 
 const SearchIcon = () => (
   <svg
@@ -13,23 +13,20 @@ const SearchIcon = () => (
 );
 
 function SearchTab() {
-  const { countries, setFilteredCountries } = useContext(CountriesContext);
+  const { filterCountries } = useContext(CountriesContext);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+      filterCountries(searchTerm)
+    }, [searchTerm]);
 
   function handleInputChange(event) {
     setSearchTerm(event.target.value);
   }
 
-  function filterCountries() {
-    const filtered = countries.filter((country) =>
-      country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCountries(filtered);
-  }
-
   return (
     <div className={styles.searchTab}>
-     <button onClick={filterCountries} className={styles.searchButton}>
+     <button onClick={()=>filterCountries(searchTerm)} className={styles.searchButton}>
         <SearchIcon />
       </button>
       <input
