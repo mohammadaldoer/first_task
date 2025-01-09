@@ -24,12 +24,20 @@ function CountriesProvider({ children }) {
       setFilteredCountries(filtered);
     }
   };
+  
+  function filterCountries(searchTerm) {
+    const filtered = countries.filter((country) =>
+      country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredCountries(filtered);
+  }
 
   const contextValue = useMemo(
     () => ({
       countries,
       filteredCountries,
       filterByRegion,
+      filterCountries,
       setFilteredCountries,
     }),
     [countries, filteredCountries]

@@ -13,27 +13,20 @@ const SearchIcon = () => (
 );
 
 function SearchTab() {
-  const { countries, setFilteredCountries } = useContext(CountriesContext);
+  const { filterCountries } = useContext(CountriesContext);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-      filterCountries()
+      filterCountries(searchTerm)
     }, [searchTerm]);
 
   function handleInputChange(event) {
     setSearchTerm(event.target.value);
   }
 
-  function filterCountries() {
-    const filtered = countries.filter((country) =>
-      country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCountries(filtered);
-  }
-
   return (
     <div className={styles.searchTab}>
-     <button onClick={filterCountries} className={styles.searchButton}>
+     <button onClick={()=>filterCountries(searchTerm)} className={styles.searchButton}>
         <SearchIcon />
       </button>
       <input
