@@ -24,8 +24,8 @@ function CountriesProvider({ children }) {
       setFilteredCountries(filtered);
     }
   };
-  
-  function filterCountries(searchTerm) {
+
+  const filterCountries = (searchTerm) => {
     const filtered = countries.filter((country) =>
       country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
     );
